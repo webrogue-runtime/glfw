@@ -40,9 +40,14 @@
 void _glfwPlatformInitTimer(void)
 {
     _glfw.timer.posix.clock = CLOCK_REALTIME;
-    _glfw.timer.posix.frequency = 1000000000;
 
-#if defined(_POSIX_MONOTONIC_CLOCK)
+#if defined (__wasi__)
+    _glfw.timer.posix.frequency = 1000000;
+#else
+    _glfw.timer.posix.frequency = 1000000000;
+#endif
+
+#if defined(_POSIX_MONOTONIC_CLOCK) && !defined (__wasi__)
     struct timespec ts;
     if (clock_gettime(CLOCK_MONOTONIC, &ts) == 0)
         _glfw.timer.posix.clock = CLOCK_MONOTONIC;
@@ -51,9 +56,16 @@ void _glfwPlatformInitTimer(void)
 
 uint64_t _glfwPlatformGetTimerValue(void)
 {
+#if defined (__wasi__)
+    struct timeval val;
+    gettimeofday(&val, NULL);
+    uint64_t usec = val.tv_sec * 1000000 + val.tv_usec;
+    return usec;
+#else
     struct timespec ts;
     clock_gettime(_glfw.timer.posix.clock, &ts);
     return (uint64_t) ts.tv_sec * _glfw.timer.posix.frequency + (uint64_t) ts.tv_nsec;
+#endif
 }
 
 uint64_t _glfwPlatformGetTimerFrequency(void)

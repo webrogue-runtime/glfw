@@ -36,17 +36,29 @@
 
 void* _glfwPlatformLoadModule(const char* path)
 {
+#if defined (__wasi__)
+    return NULL;
+#else
     return dlopen(path, RTLD_LAZY | RTLD_LOCAL);
+#endif
 }
 
 void _glfwPlatformFreeModule(void* module)
 {
+#if defined (__wasi__)
+    return;
+#else
     dlclose(module);
+#endif
 }
 
 GLFWproc _glfwPlatformGetModuleSymbol(void* module, const char* name)
 {
+#if defined (__wasi__)
+    return NULL;
+#else
     return dlsym(module, name);
+#endif
 }
 
 #endif // GLFW_BUILD_POSIX_MODULE

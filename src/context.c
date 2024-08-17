@@ -463,13 +463,14 @@ GLFWbool _glfwRefreshContextAttribs(_GLFWwindow* window,
 
         window->context.GetStringi = (PFNGLGETSTRINGIPROC)
             window->context.getProcAddress("glGetStringi");
-        if (!window->context.GetStringi)
-        {
-            _glfwInputError(GLFW_PLATFORM_ERROR,
-                            "Entry point retrieval is broken");
-            glfwMakeContextCurrent((GLFWwindow*) previous);
-            return GLFW_FALSE;
-        }
+        // TODO remove this webrogue-specific fix
+        // if (!window->context.GetStringi)
+        // {
+        //     _glfwInputError(GLFW_PLATFORM_ERROR,
+        //                     "Entry point retrieval is broken");
+        //     glfwMakeContextCurrent((GLFWwindow*) previous);
+        //     return GLFW_FALSE;
+        // }
     }
 
     if (window->context.client == GLFW_OPENGL_API)
@@ -700,7 +701,7 @@ GLFWAPI int glfwExtensionSupported(const char* extension)
         return GLFW_FALSE;
     }
 
-    if (window->context.major >= 3)
+    if (window->context.major >= 3 && window->context.GetStringi)
     {
         int i;
         GLint count;

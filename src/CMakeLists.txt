@@ -56,6 +56,14 @@ if (GLFW_BUILD_WAYLAND)
                                 wl_monitor.c wl_window.c xkb_unicode.c)
 endif()
 
+if (GLFW_BUILD_WEBROGUE)
+    target_compile_definitions(glfw PRIVATE _GLFW_WEBROGUE)
+    target_sources(glfw PRIVATE wr_platform.h wr_init.c wr_window.c)
+
+    # TODO find package
+    target_include_directories(glfw PRIVATE "${WEBROGUE_GFX_INCLUDE_PATH}")
+endif()
+
 if (GLFW_BUILD_X11 OR GLFW_BUILD_WAYLAND)
     if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
         target_sources(glfw PRIVATE linux_joystick.h linux_joystick.c)
