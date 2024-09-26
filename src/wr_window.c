@@ -147,5 +147,8 @@ GLFWbool _glfwCreateWindowWebrogue(_GLFWwindow* window,
 }
 
 void _glfwGetFramebufferSizeWebrogue(_GLFWwindow* window, int* width, int* height) {
+    webrogue_gfx_gl_size(width, height);
+}
+void _glfwGetWindowSizeWebrogue(_GLFWwindow* window, int* width, int* height) {
     webrogue_gfx_window_size(width, height);
 }

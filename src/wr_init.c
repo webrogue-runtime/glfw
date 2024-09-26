@@ -40,7 +40,7 @@ GLFWbool _glfwConnectWebrogue(int platformID, _GLFWplatform* platform)
         .setWindowIcon = _glfwSetWindowIconNull,
         .getWindowPos = _glfwGetWindowPosNull,
         .setWindowPos = _glfwSetWindowPosNull,
-        .getWindowSize = _glfwGetFramebufferSizeWebrogue,
+        .getWindowSize = _glfwGetWindowSizeWebrogue,
         .setWindowSize = _glfwSetWindowSizeNull,
         .setWindowSizeLimits = _glfwSetWindowSizeLimitsNull,
         .setWindowAspectRatio = _glfwSetWindowAspectRatioNull,
