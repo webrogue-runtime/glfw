@@ -57,7 +57,7 @@ if (GLFW_BUILD_WAYLAND)
 endif()
 
 if (GLFW_BUILD_WEBROGUE)
-    target_compile_definitions(glfw PRIVATE _GLFW_WEBROGUE)
+    target_compile_definitions(glfw PRIVATE _GLFW_WEBROGUE _POSIX_C_SOURCE)
     target_sources(glfw PRIVATE wr_platform.h wr_init.c wr_window.c)
 
     # TODO find package
