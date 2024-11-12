@@ -28,7 +28,9 @@
 
 #if defined(GLFW_BUILD_POSIX_MODULE)
 
+#if !defined (__wasi__)
 #include <dlfcn.h>
+#endif
 
 //////////////////////////////////////////////////////////////////////////
 //////                       GLFW platform API                      //////
