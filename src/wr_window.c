@@ -19,11 +19,10 @@ static void swapBuffersWebrogue(_GLFWwindow* window)
                         "EGL: The context must be current on the calling thread when swapping buffers");
         return;
     }
+
+    // ((void (*)(void)) webrogueGLLoader("glFlush"))();
     webrogue_gfx_present();
-    // swap
 }
-
-
 
 static void swapIntervalWebrogue(int interval)
 {
