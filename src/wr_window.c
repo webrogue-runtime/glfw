@@ -17,7 +17,8 @@ static void swapBuffersWebrogue(_GLFWwindow *window) {
   }
 
   // ((void (*)(void)) webroguegfx_gl_loader("glFlush"))();
-  webroguegfx_present();
+  abort();
+  // webroguegfx_present();
 }
 
 static void swapIntervalWebrogue(int interval) {}
@@ -30,7 +31,8 @@ static GLFWglproc getProcAddressWebrogue(const char *procname) {
   _GLFWwindow *window = _glfwPlatformGetTls(&_glfw.contextSlot);
   assert(window != NULL);
 
-  return (GLFWglproc)webroguegfx_gl_loader(procname);
+  abort();
+  // return (GLFWglproc)webroguegfx_gl_loader(procname);
 }
 
 static void destroyContextWebrogue(_GLFWwindow *window) {}
