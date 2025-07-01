@@ -55,6 +55,19 @@ GLFWbool _glfwCreateContextWebrogue(_GLFWwindow *window,
   return GLFW_TRUE;
 }
 
+VkResult _glfwCreateWindowSurfaceWebrogue(VkInstance instance, _GLFWwindow* window, const VkAllocationCallbacks* allocator, VkSurfaceKHR* surface) {
+  
+  VkResult err;
+  VkSurfaceCreateInfoWEBROGUE sci;
+  PFN_vkCreateSurfaceWEBROGUE vkCreateSurfaceWEBROGUE;
+
+  vkCreateSurfaceWEBROGUE = (PFN_vkCreateSurfaceWEBROGUE)
+      vkGetInstanceProcAddr(instance, "vkCreateSurfaceWEBROGUE");
+  
+  // TODO fill sci fields;
+  return vkCreateSurfaceWEBROGUE(instance, &sci, allocator, surface);
+}
+
 GLFWbool _glfwCreateWindowWebrogue(_GLFWwindow *window,
                                    const _GLFWwndconfig *wndconfig,
                                    const _GLFWctxconfig *ctxconfig,
