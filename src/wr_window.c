@@ -55,6 +55,16 @@ GLFWbool _glfwCreateContextWebrogue(_GLFWwindow *window,
   return GLFW_TRUE;
 }
 
+void _glfwGetRequiredInstanceExtensionsWebrogue(char** extensions)
+{
+    if (!_glfw.vk.KHR_surface || !_glfw.vk.WEBROGUE_surface)
+        return;
+
+    extensions[0] = "VK_KHR_surface";
+    extensions[1] = "VK_WEBROGUE_surface";
+}
+
+
 VkResult _glfwCreateWindowSurfaceWebrogue(VkInstance instance, _GLFWwindow* window, const VkAllocationCallbacks* allocator, VkSurfaceKHR* surface) {
   
   VkResult err;

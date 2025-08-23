@@ -74,7 +74,7 @@ GLFWbool _glfwConnectWebrogue(int platformID, _GLFWplatform* platform)
         .getEGLPlatform = _glfwGetEGLPlatformNull,
         .getEGLNativeDisplay = _glfwGetEGLNativeDisplayNull,
         .getEGLNativeWindow = _glfwGetEGLNativeWindowNull,
-        .getRequiredInstanceExtensions = _glfwGetRequiredInstanceExtensionsNull,
+        .getRequiredInstanceExtensions = _glfwGetRequiredInstanceExtensionsWebrogue,
         .getPhysicalDevicePresentationSupport = _glfwGetPhysicalDevicePresentationSupportNull,
         .createWindowSurface = _glfwCreateWindowSurfaceWebrogue
     };

@@ -873,6 +873,7 @@ struct _GLFWlibrary
         GLFWbool        KHR_xcb_surface;
         GLFWbool        KHR_wayland_surface;
         GLFWbool        EXT_headless_surface;
+        GLFWbool        WEBROGUE_surface;
     } vk;
 
     struct {

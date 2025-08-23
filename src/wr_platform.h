@@ -14,3 +14,4 @@ void _glfwGetFramebufferSizeWebrogue(_GLFWwindow *window, int *width,
                                      int *height);
 void _glfwGetWindowSizeWebrogue(_GLFWwindow *window, int *width,
                                      int *height);
+void _glfwGetRequiredInstanceExtensionsWebrogue(char** extensions);

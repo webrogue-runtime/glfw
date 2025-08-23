@@ -39,12 +39,23 @@
 //////                       GLFW internal API                      //////
 //////////////////////////////////////////////////////////////////////////
 
+#if defined(__wasi__)
+PFN_vkVoidFunction vk_icdGetInstanceProcAddr(
+    VkInstance                                  instance,
+    const char*                                 pName
+);
+#endif
+
 GLFWbool _glfwInitVulkan(int mode)
 {
     VkResult err;
     VkExtensionProperties* ep;
     PFN_vkEnumerateInstanceExtensionProperties vkEnumerateInstanceExtensionProperties;
     uint32_t i, count;
+
+#if defined(__wasi__)
+    _glfw.hints.init.vulkanLoader = vk_icdGetInstanceProcAddr;
+#endif
 
     if (_glfw.vk.available)
         return GLFW_TRUE;
@@ -144,6 +155,8 @@ GLFWbool _glfwInitVulkan(int mode)
             _glfw.vk.KHR_wayland_surface = GLFW_TRUE;
         else if (strcmp(ep[i].extensionName, "VK_EXT_headless_surface") == 0)
             _glfw.vk.EXT_headless_surface = GLFW_TRUE;
+        else if (strcmp(ep[i].extensionName, "VK_WEBROGUE_surface") == 0)
+            _glfw.vk.WEBROGUE_surface = GLFW_TRUE;    
     }
 
     _glfw_free(ep);
