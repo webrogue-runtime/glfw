@@ -1,8 +1,8 @@
 #include "internal.h"
 #include <assert.h>
+#include <string.h>
 #include <stdlib.h>
 #include <time.h>
-#include <webroguegfx/webroguegfx.h>
 
 static void makeContextCurrentWebrogue(_GLFWwindow *window) {
   _glfwPlatformSetTls(&_glfw.contextSlot, window);
@@ -39,21 +39,21 @@ static void destroyContextWebrogue(_GLFWwindow *window) {}
 
 // Create the OpenGL or OpenGL ES context
 //
-GLFWbool _glfwCreateContextWebrogue(_GLFWwindow *window,
-                                    const _GLFWctxconfig *ctxconfig,
-                                    const _GLFWfbconfig *fbconfig) {
-  webroguegfx_make_window();
+// GLFWbool _glfwCreateContextWebrogue(_GLFWwindow *window,
+//                                     const _GLFWctxconfig *ctxconfig,
+//                                     const _GLFWfbconfig *fbconfig) {
+//   webroguegfx_make_window(&window->wr.handle);
 
-  window->context.client = GLFW_OPENGL_ES_API;
-  window->context.makeCurrent = makeContextCurrentWebrogue;
-  window->context.swapBuffers = swapBuffersWebrogue;
-  window->context.swapInterval = swapIntervalWebrogue;
-  window->context.extensionSupported = extensionSupportedWebrogue;
-  window->context.getProcAddress = getProcAddressWebrogue;
-  window->context.destroy = destroyContextWebrogue;
+//   window->context.client = GLFW_OPENGL_ES_API;
+//   window->context.makeCurrent = makeContextCurrentWebrogue;
+//   window->context.swapBuffers = swapBuffersWebrogue;
+//   window->context.swapInterval = swapIntervalWebrogue;
+//   window->context.extensionSupported = extensionSupportedWebrogue;
+//   window->context.getProcAddress = getProcAddressWebrogue;
+//   window->context.destroy = destroyContextWebrogue;
 
-  return GLFW_TRUE;
-}
+//   return GLFW_TRUE;
+// }
 
 void _glfwGetRequiredInstanceExtensionsWebrogue(char** extensions)
 {
@@ -66,15 +66,14 @@ void _glfwGetRequiredInstanceExtensionsWebrogue(char** extensions)
 
 
 VkResult _glfwCreateWindowSurfaceWebrogue(VkInstance instance, _GLFWwindow* window, const VkAllocationCallbacks* allocator, VkSurfaceKHR* surface) {
-  
-  VkResult err;
   VkSurfaceCreateInfoWEBROGUE sci;
   PFN_vkCreateSurfaceWEBROGUE vkCreateSurfaceWEBROGUE;
 
   vkCreateSurfaceWEBROGUE = (PFN_vkCreateSurfaceWEBROGUE)
       vkGetInstanceProcAddr(instance, "vkCreateSurfaceWEBROGUE");
-  
-  // TODO fill sci fields;
+
+  memset(&sci, 0, sizeof(VkSurfaceCreateInfoWEBROGUE));
+  sci.window = window->wr.handle;
   return vkCreateSurfaceWEBROGUE(instance, &sci, allocator, surface);
 }
 
@@ -119,15 +118,17 @@ GLFWbool _glfwCreateWindowWebrogue(_GLFWwindow *window,
   // if (!createNativeWindow(window, wndconfig, visual, depth))
   //     return GLFW_FALSE;
 
-  if (ctxconfig->client != GLFW_NO_API) {
-    // if (ctxconfig->source == GLFW_NATIVE_CONTEXT_API)
-    // {
-    if (!_glfwCreateContextWebrogue(window, ctxconfig, fbconfig))
-      return GLFW_FALSE;
-    // }
+  if (ctxconfig->client == GLFW_NO_API) {
+    webroguegfx_make_window(&window->wr.handle);
+  } else {
+    // OpenGl is currently not supported
+    assert(false);
+    return GLFW_FALSE;
+    // if (!_glfwCreateContextWebrogue(window, ctxconfig, fbconfig))
+    //   return GLFW_FALSE;
 
-    if (!_glfwRefreshContextAttribs(window, ctxconfig))
-      return GLFW_FALSE;
+    // if (!_glfwRefreshContextAttribs(window, ctxconfig))
+    //   return GLFW_FALSE;
   }
 
   // if (wndconfig->mousePassthrough)
@@ -158,8 +159,8 @@ GLFWbool _glfwCreateWindowWebrogue(_GLFWwindow *window,
 
 void _glfwGetFramebufferSizeWebrogue(_GLFWwindow *window, int *width,
                                      int *height) {
-  webroguegfx_gl_size(width, height);
+  webroguegfx_gl_size(window->wr.handle, width, height);
 }
 void _glfwGetWindowSizeWebrogue(_GLFWwindow *window, int *width, int *height) {
-  webroguegfx_window_size(width, height);
+  webroguegfx_window_size(window->wr.handle, width, height);
 }

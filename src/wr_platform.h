@@ -1,11 +1,22 @@
+#include <webroguegfx/webroguegfx.h>
+
 typedef VkFlags VkSurfaceCreateFlagsWEBROGUE;
 typedef struct VkSurfaceCreateInfoWEBROGUE {
     VkStructureType                 sType;
     const void*                     pNext;
     VkSurfaceCreateFlagsWEBROGUE    flags;
+    wr_window_handle                window;
 } VkSurfaceCreateInfoWEBROGUE;
 
 typedef VkResult (APIENTRY *PFN_vkCreateSurfaceWEBROGUE)(VkInstance instance, const VkSurfaceCreateInfoWEBROGUE* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface);
+
+#define GLFW_WEBROGUE_WINDOW_STATE         _GLFWwindowWebrogue  wr;
+// Webrogue-specific per-window data
+//
+typedef struct _GLFWwindowWebrogue
+{
+    wr_window_handle handle;
+} _GLFWwindowWebrogue;
 
 GLFWbool _glfwConnectWebrogue(int platformID, _GLFWplatform* platform);
 GLFWbool _glfwCreateWindowWebrogue(_GLFWwindow* window, const _GLFWwndconfig* wndconfig, const _GLFWctxconfig* ctxconfig, const _GLFWfbconfig* fbconfig);
