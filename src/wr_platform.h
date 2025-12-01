@@ -5,7 +5,7 @@ typedef struct VkSurfaceCreateInfoWEBROGUE {
     VkStructureType                 sType;
     const void*                     pNext;
     VkSurfaceCreateFlagsWEBROGUE    flags;
-    wr_window_handle                window;
+    const void*                     window;
 } VkSurfaceCreateInfoWEBROGUE;
 
 typedef VkResult (APIENTRY *PFN_vkCreateSurfaceWEBROGUE)(VkInstance instance, const VkSurfaceCreateInfoWEBROGUE* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface);
@@ -15,7 +15,7 @@ typedef VkResult (APIENTRY *PFN_vkCreateSurfaceWEBROGUE)(VkInstance instance, co
 //
 typedef struct _GLFWwindowWebrogue
 {
-    wr_window_handle handle;
+    wr_window handle;
 } _GLFWwindowWebrogue;
 
 GLFWbool _glfwConnectWebrogue(int platformID, _GLFWplatform* platform);
