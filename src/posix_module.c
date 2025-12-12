@@ -39,7 +39,7 @@
 void* _glfwPlatformLoadModule(const char* path)
 {
 #if defined (__wasi__)
-    return NULL;
+    __builtin_unreachable();
 #else
     return dlopen(path, RTLD_LAZY | RTLD_LOCAL);
 #endif
@@ -57,7 +57,7 @@ void _glfwPlatformFreeModule(void* module)
 GLFWproc _glfwPlatformGetModuleSymbol(void* module, const char* name)
 {
 #if defined (__wasi__)
-    return NULL;
+    __builtin_unreachable();
 #else
     return dlsym(module, name);
 #endif

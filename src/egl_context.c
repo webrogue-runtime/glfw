@@ -365,6 +365,26 @@ GLFWbool _glfwInitEGL(void)
     int i;
     EGLint* attribs = NULL;
     const char* extensions;
+#ifdef __wasi__
+#define LOAD(name) _glfw.egl.name = (PFN_egl##name) eglGetProcAddress("egl" #name)
+    LOAD(GetConfigAttrib);
+    LOAD(GetConfigs);
+    LOAD(GetDisplay);
+    LOAD(GetError);
+    LOAD(Initialize);
+    LOAD(Terminate);
+    LOAD(BindAPI);
+    LOAD(CreateContext);
+    LOAD(DestroySurface);
+    LOAD(DestroyContext);
+    LOAD(CreateWindowSurface);
+    LOAD(CreatePbufferSurface);
+    LOAD(MakeCurrent);
+    LOAD(SwapBuffers);
+    LOAD(SwapInterval);
+    LOAD(QueryString);
+#undef LOAD
+#else
     const char* sonames[] =
     {
 #if defined(_GLFW_EGL_LIBRARY)
@@ -436,6 +456,7 @@ GLFWbool _glfwInitEGL(void)
         _glfwPlatformGetModuleSymbol(_glfw.egl.handle, "eglQueryString");
     _glfw.egl.GetProcAddress = (PFN_eglGetProcAddress)
         _glfwPlatformGetModuleSymbol(_glfw.egl.handle, "eglGetProcAddress");
+#endif
 
     if (!_glfw.egl.GetConfigAttrib ||
         !_glfw.egl.GetConfigs ||

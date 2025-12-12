@@ -4,56 +4,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-static void makeContextCurrentWebrogue(_GLFWwindow *window) {
-  _glfwPlatformSetTls(&_glfw.contextSlot, window);
-}
-
-static void swapBuffersWebrogue(_GLFWwindow *window) {
-  if (window != _glfwPlatformGetTls(&_glfw.contextSlot)) {
-    _glfwInputError(GLFW_PLATFORM_ERROR,
-                    "EGL: The context must be current on the calling thread "
-                    "when swapping buffers");
-    return;
-  }
-
-  // ((void (*)(void)) webroguegfx_gl_loader("glFlush"))();
-  abort();
-  // webroguegfx_present();
-}
-
-static void swapIntervalWebrogue(int interval) {}
-
-static int extensionSupportedWebrogue(const char *extension) {
-  return GLFW_FALSE;
-}
-
-static GLFWglproc getProcAddressWebrogue(const char *procname) {
-  _GLFWwindow *window = _glfwPlatformGetTls(&_glfw.contextSlot);
-  assert(window != NULL);
-
-  abort();
-  // return (GLFWglproc)webroguegfx_gl_loader(procname);
-}
-
-static void destroyContextWebrogue(_GLFWwindow *window) {}
-
-// Create the OpenGL or OpenGL ES context
-//
-// GLFWbool _glfwCreateContextWebrogue(_GLFWwindow *window,
-//                                     const _GLFWctxconfig *ctxconfig,
-//                                     const _GLFWfbconfig *fbconfig) {
-//   webroguegfx_make_window(&window->wr.handle);
-
-//   window->context.client = GLFW_OPENGL_ES_API;
-//   window->context.makeCurrent = makeContextCurrentWebrogue;
-//   window->context.swapBuffers = swapBuffersWebrogue;
-//   window->context.swapInterval = swapIntervalWebrogue;
-//   window->context.extensionSupported = extensionSupportedWebrogue;
-//   window->context.getProcAddress = getProcAddressWebrogue;
-//   window->context.destroy = destroyContextWebrogue;
-
-//   return GLFW_TRUE;
-// }
 
 void _glfwGetRequiredInstanceExtensionsWebrogue(char** extensions)
 {
@@ -64,6 +14,8 @@ void _glfwGetRequiredInstanceExtensionsWebrogue(char** extensions)
     extensions[1] = "VK_WEBROGUE_surface";
 }
 
+static _GLFWwindow **wrWindows = NULL;
+static int wrWindowsCount = 0;
 
 VkResult _glfwCreateWindowSurfaceWebrogue(VkInstance instance, _GLFWwindow* window, const VkAllocationCallbacks* allocator, VkSurfaceKHR* surface) {
   VkSurfaceCreateInfoWEBROGUE sci;
@@ -77,84 +29,45 @@ VkResult _glfwCreateWindowSurfaceWebrogue(VkInstance instance, _GLFWwindow* wind
   return vkCreateSurfaceWEBROGUE(instance, &sci, allocator, surface);
 }
 
+#undef eglGetProcAddress
+GLFWglproc APIENTRY eglGetProcAddress(const char*);
+
 GLFWbool _glfwCreateWindowWebrogue(_GLFWwindow *window,
                                    const _GLFWwndconfig *wndconfig,
                                    const _GLFWctxconfig *ctxconfig,
                                    const _GLFWfbconfig *fbconfig) {
-  // Visual* visual = NULL;
-  // int depth;
-
-  // if (ctxconfig->client != GLFW_NO_API)
-  // {
-  //     if (ctxconfig->source == GLFW_NATIVE_CONTEXT_API)
-  //     {
-  //         if (!_glfwInitGLX())
-  //             return GLFW_FALSE;
-  //         if (!_glfwChooseVisualGLX(wndconfig, ctxconfig, fbconfig, &visual,
-  //         &depth))
-  //             return GLFW_FALSE;
-  //     }
-  //     else if (ctxconfig->source == GLFW_EGL_CONTEXT_API)
-  //     {
-  //         if (!_glfwInitEGL())
-  //             return GLFW_FALSE;
-  //         if (!_glfwChooseVisualEGL(wndconfig, ctxconfig, fbconfig, &visual,
-  //         &depth))
-  //             return GLFW_FALSE;
-  //     }
-  //     else if (ctxconfig->source == GLFW_OSMESA_CONTEXT_API)
-  //     {
-  //         if (!_glfwInitOSMesa())
-  //             return GLFW_FALSE;
-  //     }
-  // }
-
-  // if (!visual)
-  // {
-  //     visual = DefaultVisual(_glfw.x11.display, _glfw.x11.screen);
-  //     depth = DefaultDepth(_glfw.x11.display, _glfw.x11.screen);
-  // }
-
-  // if (!createNativeWindow(window, wndconfig, visual, depth))
-  //     return GLFW_FALSE;
-
-  if (ctxconfig->client == GLFW_NO_API) {
     webroguegfx_make_window(&window->wr.handle);
-  } else {
-    // OpenGl is currently not supported
-    assert(false);
-    return GLFW_FALSE;
-    // if (!_glfwCreateContextWebrogue(window, ctxconfig, fbconfig))
-    //   return GLFW_FALSE;
 
-    // if (!_glfwRefreshContextAttribs(window, ctxconfig))
-    //   return GLFW_FALSE;
-  }
+    if (ctxconfig->client != GLFW_NO_API)
+    {
+        if (ctxconfig->source == GLFW_EGL_CONTEXT_API ||
+            ctxconfig->source == GLFW_NATIVE_CONTEXT_API)
+        {
+            if (!window->wr.handle)
+            {
+                _glfwInputError(GLFW_PLATFORM_ERROR,
+                                "Webrogue: Failed to create Webrogue window");
+                return GLFW_FALSE;
+            }
 
-  // if (wndconfig->mousePassthrough)
-  //     _glfwSetWindowMousePassthroughX11(window, GLFW_TRUE);
+            _glfw.egl.GetProcAddress = eglGetProcAddress;
+            if (!_glfwInitEGL())
+                return GLFW_FALSE;
+            if (!_glfwCreateContextEGL(window, ctxconfig, fbconfig))
+                return GLFW_FALSE;
+        }
 
-  // if (window->monitor)
-  // {
-  //     _glfwShowWindowX11(window);
-  //     updateWindowMode(window);
-  //     acquireMonitor(window);
+        if (!_glfwRefreshContextAttribs(window, ctxconfig))
+            return GLFW_FALSE;
+    }
 
-  //     if (wndconfig->centerCursor)
-  //         _glfwCenterCursorInContentArea(window);
-  // }
-  // else
-  // {
-  //     if (wndconfig->visible)
-  //     {
-  //         _glfwShowWindowX11(window);
-  //         if (wndconfig->focused)
-  //             _glfwFocusWindowX11(window);
-  //     }
-  // }
-
-  // XFlush(_glfw.x11.display);
-  return GLFW_TRUE;
+    if(wrWindowsCount == 0) {
+        wrWindows = malloc(sizeof(_GLFWwindow*));
+    } else {
+        wrWindows = realloc(wrWindows, (wrWindowsCount + 1) * sizeof(_GLFWwindow*));
+    }
+    wrWindows[wrWindowsCount++] = window;
+    return GLFW_TRUE;
 }
 
 void _glfwGetFramebufferSizeWebrogue(_GLFWwindow *window, int *width,
@@ -163,4 +76,46 @@ void _glfwGetFramebufferSizeWebrogue(_GLFWwindow *window, int *width,
 }
 void _glfwGetWindowSizeWebrogue(_GLFWwindow *window, int *width, int *height) {
   webroguegfx_window_size(window->wr.handle, width, height);
+}
+
+EGLNativeWindowType _glfwGetEGLNativeWindowWebrogue(_GLFWwindow* window)
+{
+    return window->wr.handle;
+}
+
+EGLNativeDisplayType _glfwGetEGLNativeDisplayWebrogue(void)
+{
+    return EGL_DEFAULT_DISPLAY;
+}
+
+static void handleEvents(double* timeout)
+{
+    while(1) {
+        webrogue_event event = webroguegfx_poll();
+        switch (event.type) {
+            case WEBROGUE_EVENT_TYPE_INVALID:
+                return;
+            case WEBROGUE_EVENT_TYPE_QUIT: {
+                for(int i = 0; i < wrWindowsCount; i++)
+                    _glfwInputWindowCloseRequest(wrWindows[i]);
+                break;
+            }
+        }
+    }
+}
+
+void _glfwPollEventsWebrogue(void)
+{
+    double timeout = 0.0;
+    handleEvents(&timeout);
+}
+
+void _glfwWaitEventsWebrogue(void)
+{
+    handleEvents(NULL);
+}
+
+void _glfwWaitEventsTimeoutWebrogue(double timeout)
+{
+    handleEvents(&timeout);
 }
