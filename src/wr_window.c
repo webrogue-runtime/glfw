@@ -29,8 +29,7 @@ VkResult _glfwCreateWindowSurfaceWebrogue(VkInstance instance, _GLFWwindow* wind
   return vkCreateSurfaceWEBROGUE(instance, &sci, allocator, surface);
 }
 
-#undef eglGetProcAddress
-GLFWglproc APIENTRY eglGetProcAddress(const char*);
+static GLFWglproc APIENTRY static_eglGetProcAddress(const char*) __attribute__ ((weakref ("eglGetProcAddress")));
 
 GLFWbool _glfwCreateWindowWebrogue(_GLFWwindow *window,
                                    const _GLFWwndconfig *wndconfig,
@@ -50,7 +49,13 @@ GLFWbool _glfwCreateWindowWebrogue(_GLFWwindow *window,
                 return GLFW_FALSE;
             }
 
-            _glfw.egl.GetProcAddress = eglGetProcAddress;
+            if (!static_eglGetProcAddress)
+            {
+                _glfwInputError(GLFW_PLATFORM_ERROR,
+                                "Webrogue: eglGetProcAddress function not found. You probably forgot -Wl,--export=eglGetProcAddress or -lEGL flag.");
+                return GLFW_FALSE;
+            }
+            _glfw.egl.GetProcAddress = static_eglGetProcAddress;
             if (!_glfwInitEGL())
                 return GLFW_FALSE;
             if (!_glfwCreateContextEGL(window, ctxconfig, fbconfig))
