@@ -64,7 +64,7 @@ GLFWbool _glfwInitVulkan(int mode)
     } else if (static_vkGetInstanceProcAddr) {
         _glfw.hints.init.vulkanLoader = static_vkGetInstanceProcAddr;
     } else {
-        _glfwInputError(GLFW_API_UNAVAILABLE, "Vulkan: neither vkGetInstanceProcAddr nor vk_icdGetInstanceProcAddr functions found. You probably forgot -Wl,--export=vkGetInstanceProcAddr or -lvulkan flag. Alternatively you can specify -Wl,--export=vk_icdGetInstanceProcAddr and -lvulkan_gfxstream flags to link Vulkan driver directly.");
+        _glfwInputError(GLFW_API_UNAVAILABLE, "Vulkan: neither vkGetInstanceProcAddr nor vk_icdGetInstanceProcAddr functions found. You probably forgot -Wl,--export=vkGetInstanceProcAddr or -lvulkan flag. Alternatively you can specify -Wl,--export=vk_icdGetInstanceProcAddr and -lvulkan_virtio flags to link Vulkan driver directly.");
         
         return GLFW_FALSE;
     }

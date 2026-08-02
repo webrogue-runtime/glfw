@@ -25,7 +25,8 @@ VkResult _glfwCreateWindowSurfaceWebrogue(VkInstance instance, _GLFWwindow* wind
       vkGetInstanceProcAddr(instance, "vkCreateSurfaceWEBROGUE");
 
   memset(&sci, 0, sizeof(VkSurfaceCreateInfoWEBROGUE));
-  sci.window = window->wr.handle;
+  sci.sType = VK_STRUCTURE_TYPE_SURFACE_CREATE_INFO_WEBROGUE;
+  sci.webrogue_window_id = webroguegfx_get_vulkan_window_id(window->wr.handle);
   return vkCreateSurfaceWEBROGUE(instance, &sci, allocator, surface);
 }
 

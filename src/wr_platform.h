@@ -5,7 +5,7 @@ typedef struct VkSurfaceCreateInfoWEBROGUE {
     VkStructureType                 sType;
     const void*                     pNext;
     VkSurfaceCreateFlagsWEBROGUE    flags;
-    const void*                     window;
+    uint32_t                        webrogue_window_id;
 } VkSurfaceCreateInfoWEBROGUE;
 
 typedef VkResult (APIENTRY *PFN_vkCreateSurfaceWEBROGUE)(VkInstance instance, const VkSurfaceCreateInfoWEBROGUE* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface);
