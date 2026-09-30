@@ -1,4 +1,4 @@
-#include <webroguegfx/webroguegfx.h>
+#include <libwr4c/wr4c.h>
 
 typedef VkFlags VkSurfaceCreateFlagsWEBROGUE;
 typedef struct VkSurfaceCreateInfoWEBROGUE {
@@ -15,7 +15,7 @@ typedef VkResult (APIENTRY *PFN_vkCreateSurfaceWEBROGUE)(VkInstance instance, co
 //
 typedef struct _GLFWwindowWebrogue
 {
-    wr_window handle;
+    wr4c_window_t handle;
 } _GLFWwindowWebrogue;
 
 GLFWbool _glfwConnectWebrogue(int platformID, _GLFWplatform* platform);

@@ -26,7 +26,7 @@ VkResult _glfwCreateWindowSurfaceWebrogue(VkInstance instance, _GLFWwindow* wind
 
   memset(&sci, 0, sizeof(VkSurfaceCreateInfoWEBROGUE));
   sci.sType = VK_STRUCTURE_TYPE_SURFACE_CREATE_INFO_WEBROGUE;
-  sci.webrogue_window_id = webroguegfx_get_vulkan_window_id(window->wr.handle);
+  sci.webrogue_window_id = wr4c_get_vulkan_window_id(window->wr.handle);
   return vkCreateSurfaceWEBROGUE(instance, &sci, allocator, surface);
 }
 
@@ -36,7 +36,7 @@ GLFWbool _glfwCreateWindowWebrogue(_GLFWwindow *window,
                                    const _GLFWwndconfig *wndconfig,
                                    const _GLFWctxconfig *ctxconfig,
                                    const _GLFWfbconfig *fbconfig) {
-    webroguegfx_make_window(&window->wr.handle);
+    wr4c_make_window(&window->wr.handle);
 
     if (ctxconfig->client != GLFW_NO_API)
     {
@@ -78,10 +78,10 @@ GLFWbool _glfwCreateWindowWebrogue(_GLFWwindow *window,
 
 void _glfwGetFramebufferSizeWebrogue(_GLFWwindow *window, int *width,
                                      int *height) {
-  webroguegfx_gl_size(window->wr.handle, width, height);
+  wr4c_gl_size(window->wr.handle, width, height);
 }
 void _glfwGetWindowSizeWebrogue(_GLFWwindow *window, int *width, int *height) {
-  webroguegfx_window_size(window->wr.handle, width, height);
+  wr4c_window_size(window->wr.handle, width, height);
 }
 
 EGLNativeWindowType _glfwGetEGLNativeWindowWebrogue(_GLFWwindow* window)
@@ -97,15 +97,17 @@ EGLNativeDisplayType _glfwGetEGLNativeDisplayWebrogue(void)
 static void handleEvents(double* timeout)
 {
     while(1) {
-        webrogue_event event = webroguegfx_poll();
-        switch (event.type) {
-            case WEBROGUE_EVENT_TYPE_INVALID:
+        wr4c_event_t event = wr4c_poll();
+        switch (event.tag) {
+            case WR4C_EVENT_TAG_INVALID:
                 return;
-            case WEBROGUE_EVENT_TYPE_QUIT: {
+            case WR4C_EVENT_TAG_QUIT: {
                 for(int i = 0; i < wrWindowsCount; i++)
                     _glfwInputWindowCloseRequest(wrWindows[i]);
                 break;
             }
+            default:
+                break;
         }
     }
 }

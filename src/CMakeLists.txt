@@ -128,7 +128,7 @@ set_target_properties(glfw PROPERTIES
                       OUTPUT_NAME ${GLFW_LIB_NAME}
                       VERSION ${GLFW_VERSION_MAJOR}.${GLFW_VERSION_MINOR}
                       SOVERSION ${GLFW_VERSION_MAJOR}
-                      POSITION_INDEPENDENT_CODE ON
+                      POSITION_INDEPENDENT_CODE OFF
                       C_STANDARD 99
                       C_EXTENSIONS OFF
                       DEFINE_SYMBOL _GLFW_BUILD_DLL
