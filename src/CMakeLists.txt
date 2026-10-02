@@ -253,8 +253,8 @@ endif()
 
 if (WASI)
     # TODO remove EGL dependency
-    target_link_libraries(glfw PUBLIC -lwebroguegfx -lc++ -lc++abi)
-    list(APPEND glfw_PKG_LIBS "-lwebroguegfx -lc++ -lc++abi")
+    target_link_libraries(glfw PUBLIC -lwr4c -lc++ -lc++abi)
+    list(APPEND glfw_PKG_LIBS "-lwr4c -lc++ -lc++abi")
 endif()
 
 # Enable a reasonable set of warnings
