@@ -78,10 +78,10 @@ GLFWbool _glfwCreateWindowWebrogue(_GLFWwindow *window,
 
 void _glfwGetFramebufferSizeWebrogue(_GLFWwindow *window, int *width,
                                      int *height) {
-  wr4c_gl_size(window->wr.handle, width, height);
+  wr4c_physical_size(window->wr.handle, width, height);
 }
 void _glfwGetWindowSizeWebrogue(_GLFWwindow *window, int *width, int *height) {
-  wr4c_window_size(window->wr.handle, width, height);
+  wr4c_logical_size(window->wr.handle, width, height);
 }
 
 EGLNativeWindowType _glfwGetEGLNativeWindowWebrogue(_GLFWwindow* window)
